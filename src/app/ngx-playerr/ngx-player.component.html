@@ -1,0 +1,20 @@
+<div>
+  <input type="text" placeholder="Zone"/>
+  <select>
+    <option value="zone">Z1</option>
+  </select>
+  <button>View Zone Playback</button>
+</div>
+
+<div *ngIf="newFeed">
+  <span>New data</span>
+</div>
+<div *ngIf="!newFeed">
+  <span>Random</span>
+</div>
+
+<div class="video-player-wrapper">
+  <ngx-video-list-player [config]="config" (onCanPlay)="test($event)">
+
+  </ngx-video-list-player>
+</div>
