@@ -45,7 +45,7 @@ export class NgxPlayerComponent implements OnInit {
 
   initVideoApi() {
     
-    this.httpClient.get("http://localhost:3000/api/v1/core-strategy/video-playback")
+    this.httpClient.get("http://20.216.28.177/api/v1/core-strategy/video-playback")
     .subscribe((res: any) => {
       const obj: IVideoSource[] = [];
       res.data.forEach((el: any) => {

@@ -6,7 +6,7 @@
 
 ```js
     initVideoApi() {
-      this.httpClient.get("http://localhost:3000/api/v1/task/video-feed?byBoardId="+this.billboardId)
+      this.httpClient.get("http://20.216.28.177/api/v1/task/video-feed?byBoardId="+this.billboardId)
 ```
 
 # Api re-fetch interval of 10s
