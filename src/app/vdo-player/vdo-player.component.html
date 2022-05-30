@@ -1,9 +1,6 @@
 <div>
-  <input type="text" placeholder="Zone"/>
-  <select>
-    <option value="zone">Z1</option>
-  </select>
-  <button>View Zone Playback</button>
+  <input [(ngModel)]="billboardId" type="text" placeholder="Zone"/>
+  <button>Switch Billboard</button>
 </div>
 
 <div *ngIf="newFeed">
@@ -14,6 +11,7 @@
 </div>
 
 <div class="video-player-wrapper">
+  <div><h2>Displaying Billboard ID: {{ billboardId }}</h2></div>
   <vg-player (onPlayerReady)="onPlayerReady($event)">
     <vg-overlay-play></vg-overlay-play>
     <vg-buffering></vg-buffering>

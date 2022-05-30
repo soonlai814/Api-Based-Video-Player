@@ -20,6 +20,7 @@
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
     "@videogular/ngx-videogular": "^5.0.1",
+    "ng-zorro-antd": "^13.2.2",
     "ngx-video-list-player": "^13.0.2",
     "ngx-videogular": "^13.2.4",
     "rxjs": "~7.5.0",

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { VgApiService } from '@videogular/ngx-videogular/core';
 import { VgAPI } from 'ngx-videogular';
 @Component({
@@ -8,21 +9,7 @@ import { VgAPI } from 'ngx-videogular';
   styleUrls: ['./vdo-player.component.less']
 })
 export class VdoPlayerComponent implements OnInit {
-  playlist = [    {
-    title: 'Pale Blue Dot',
-    src: 'http://static.videogular.com/assets/videos/videogular.mp4',
-    type: 'video/mp4'
-  },
-  {
-    title: 'Big Buck Bunny',
-    src: 'http://static.videogular.com/assets/videos/big_buck_bunny_720p_h264.mov',
-    type: 'video/mp4'
-  },
-  {
-    title: 'Elephants Dream',
-    src: 'http://static.videogular.com/assets/videos/elephants-dream.mp4',
-    type: 'video/mp4'
-  }];
+  playlist: any[] = [];
   // videoItems = [
   //     {
   //       name: 'Video one',
@@ -49,34 +36,46 @@ export class VdoPlayerComponent implements OnInit {
     api!: VgApiService;
     newFeed: boolean = false;
     condition: boolean = true;
+    billboardId: number = 1;
     constructor(
       private httpClient : HttpClient,
-      private cdr: ChangeDetectorRef
-    ) { }
+      private cdr: ChangeDetectorRef,
+      private route: ActivatedRoute
+    ) {}
+
+    get param() {
+      return this.route.snapshot.paramMap.get('id');
+    }
 
     ngOnInit(): void {
+      this.billboardId = Number(this.param);
       this.initVideoApi();
       this.initInterval();
       // console.log(this.videoItems)
     }
 
+    switchBoard(requestedBillboardId: number) {
 
+    }
 
     initVideoApi() {
-      this.httpClient.get("http://localhost:3000/api/v1/core-strategy/video-playback")
+      this.httpClient.get("http://localhost:3000/api/v1/task/video-feed?byBoardId="+this.billboardId)
       .subscribe((res: any) => {
         this.playlist = [];
         const obj: any[] = [];
         this.count = res.data.length*10000;
+        if(res.message == 'Random playable') {
+          this.newFeed = false;
+        } else {
+          this.newFeed = true;
+        }
         res.data.forEach((el: any, index: any) => {
           
-          if(el.status == 'A'){
-            obj.push({
-              title: el.title,
-              src: el.fileSource,
-              type: 'video/mp4'
-            })
-          }
+          obj.push({
+            title: el.title,
+            src: el.fileSource,
+            type: 'video/mp4'
+          })
           this.playlist = obj;
           this.currentItem = this.playlist[this.currentIndex];
           

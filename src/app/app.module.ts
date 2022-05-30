@@ -14,14 +14,23 @@ import { HttpClientModule } from  '@angular/common/http';
 import { NgxVideoListPlayerModule } from 'ngx-video-list-player';
 import { NgxPlayerComponent } from './ngx-playerr/ngx-player.component';
 import { VdoPlayerDetectedComponent } from './vdo-player-detected/vdo-player-detected.component';
+import { TableComponent } from './Sample/table.component';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { FormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
     AppComponent,
     VdoPlayerComponent,
     VdoPlayerDetectedComponent,
-    NgxPlayerComponent
+    NgxPlayerComponent,
+    TableComponent
   ],
   imports: [
+    FormsModule,
+    NzDividerModule,
+    NzTableModule,
     NgxVideoListPlayerModule,
     HttpClientModule,
     BrowserModule,
