@@ -59,7 +59,7 @@ export class VdoPlayerComponent implements OnInit {
     }
 
     initVideoApi() {
-      this.httpClient.get("http://20.216.28.177/api/v1/task/video-feed?byBoardId="+this.billboardId)
+      this.httpClient.get("https://trial.innovix.ai/api/v1/task/video-feed?byBoardId="+this.billboardId)
       .subscribe((res: any) => {
         this.playlist = [];
         const obj: any[] = [];
@@ -74,7 +74,8 @@ export class VdoPlayerComponent implements OnInit {
           obj.push({
             title: el.title,
             src: el.fileSource,
-            type: 'video/mp4'
+            type: 'video/mp4',
+            queueId: el.queueId,
           })
           this.playlist = obj;
           this.currentItem = this.playlist[this.currentIndex];
@@ -99,6 +100,7 @@ export class VdoPlayerComponent implements OnInit {
       this.api.getDefaultMedia().subscriptions.ended.subscribe(this.nextVideo.bind(this));
     }
     nextVideo() {
+      this.httpClient.post("https://trial.innovix.ai/api/v1/task/update-video-feed/"+this.currentItem.queueId, null).subscribe((res) => console.log('data', res));
       this.currentIndex++;
 
       if (this.currentIndex === this.playlist.length) {
@@ -106,6 +108,7 @@ export class VdoPlayerComponent implements OnInit {
       }
 
       this.currentItem = this.playlist[this.currentIndex];
+      this.playVideo();
     }
     playVideo() {
       this.api.play();

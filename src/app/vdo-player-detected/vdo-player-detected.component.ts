@@ -61,7 +61,7 @@ export class VdoPlayerDetectedComponent implements OnInit {
     }
 
     initVideoApi() {
-      this.httpClient.get("http://20.216.28.177/api/v1/cron-task/live-feed")
+      this.httpClient.get("https://trial.innovix.ai/api/v1/cron-task/live-feed")
       .subscribe((res: any) => {
         this.playlist = [];
         const obj: any[] = [];
