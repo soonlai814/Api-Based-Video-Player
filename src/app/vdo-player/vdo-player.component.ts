@@ -37,6 +37,7 @@ export class VdoPlayerComponent implements OnInit {
     newFeed: boolean = false;
     condition: boolean = true;
     billboardId: number = 1;
+    queueId = 0;
     constructor(
       private httpClient : HttpClient,
       private cdr: ChangeDetectorRef,
@@ -59,8 +60,9 @@ export class VdoPlayerComponent implements OnInit {
     }
 
     initVideoApi() {
-      this.httpClient.get("https://trial.innovix.ai/api/v1/task/video-feed?byBoardId="+this.billboardId)
+      this.httpClient.get("http://localhost:3000/api/v1/task/video-feed?byBoardId="+this.billboardId)
       .subscribe((res: any) => {
+        this.currentIndex = 0;
         this.playlist = [];
         const obj: any[] = [];
         this.count = res.data.length*10000;
@@ -78,7 +80,12 @@ export class VdoPlayerComponent implements OnInit {
             queueId: el.queueId,
           })
           this.playlist = obj;
-          this.currentItem = this.playlist[this.currentIndex];
+
+          if (this.currentIndex != 0) {
+            this.currentIndex = 0;
+          } else {
+            this.currentItem = this.playlist[this.currentIndex];
+          }
           
           // this.condition = false;
         })
@@ -100,7 +107,8 @@ export class VdoPlayerComponent implements OnInit {
       this.api.getDefaultMedia().subscriptions.ended.subscribe(this.nextVideo.bind(this));
     }
     nextVideo() {
-      this.httpClient.post("https://trial.innovix.ai/api/v1/task/update-video-feed/"+this.currentItem.queueId, null).subscribe((res) => console.log('data', res));
+      console.log('next', this.currentItem);
+      this.httpClient.post("http://localhost:3000/api/v1/task/update-video-feed/"+this.currentItem.queueId, null).subscribe((res) => console.log('data', res));
       this.currentIndex++;
 
       if (this.currentIndex === this.playlist.length) {
