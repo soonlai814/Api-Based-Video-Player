@@ -1,3 +1,11 @@
+// Change log
+// Removed interval fetching to prevent unwanted playlist shuffle before finishing until end of playlist
+//
+// [Added]:
+// 1. Random playlist maintain until the last video to refetch API
+// 2. Interrupt the playlist if there is a tracking detected, then new playlist will be allocated
+// End of Change log
+
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
@@ -29,6 +37,8 @@ export class VdoPlayerComponent implements OnInit {
   //   ];
     activeIndex = 0;
     count = 0;
+    videoCount = 0;
+    allowInterrupt = false;
     // currentVideo = this.videoItems[this.activeIndex];
     currentIndex = 0;
     currentItem: any = this.playlist[this.currentIndex];
@@ -51,7 +61,7 @@ export class VdoPlayerComponent implements OnInit {
     ngOnInit(): void {
       this.billboardId = Number(this.param);
       this.initVideoApi();
-      this.initInterval();
+      this.interruptInterval();
       // console.log(this.videoItems)
     }
 
@@ -60,6 +70,7 @@ export class VdoPlayerComponent implements OnInit {
     }
 
     initVideoApi() {
+      this.videoCount = 0;
       this.httpClient.get("http://localhost:3000/api/v1/task/video-feed?byBoardId="+this.billboardId)
       .subscribe((res: any) => {
         this.currentIndex = 0;
@@ -70,15 +81,17 @@ export class VdoPlayerComponent implements OnInit {
           this.newFeed = false;
         } else {
           this.newFeed = true;
-        }
+        };
         res.data.forEach((el: any, index: any) => {
-          
+          this.videoCount++;
           obj.push({
+            index: index+1,
             title: el.title,
             src: el.fileSource,
             type: 'video/mp4',
             queueId: el.queueId,
-          })
+          });
+
           this.playlist = obj;
 
           if (this.currentIndex != 0) {
@@ -89,16 +102,30 @@ export class VdoPlayerComponent implements OnInit {
           
           // this.condition = false;
         })
+        console.log(this.videoCount);
         this.cdr.detectChanges();
       })
     }
 
-    initInterval() {
-      const count = this.count;
-      setInterval(() => {
-        this.initVideoApi();
-        console.log('refreshed')
-      }, 10000)
+    // Check if available tracked person in queue waiting [ if exist then interrupt ]
+    interruptInterval() {
+        setInterval(() => {
+          this.interrupt();
+        }, 10000)
+    }
+
+    interrupt() {
+      // To interrupt a long playlist
+      this.httpClient.get("http://localhost:3000/api/v1/task/check-queue/"+this.billboardId).subscribe((res: any) => {
+        if(res.data > 0) {
+          this.allowInterrupt = true;
+          console.log('Interrupted, New Tracked Person Object');
+        } else {
+          this.allowInterrupt = false;
+          console.log('Nothing to change');
+        }
+        console.log('data', res);
+      })
     }
 
     onPlayerReady(api: VgApiService) {
@@ -113,6 +140,15 @@ export class VdoPlayerComponent implements OnInit {
 
       if (this.currentIndex === this.playlist.length) {
         this.currentIndex = 0;
+      }
+
+      if(this.allowInterrupt) {
+        this.initVideoApi();
+      }
+
+      if(this.currentItem.index == this.videoCount) {
+        console.log('End of video, refetch')
+        this.initVideoApi();
       }
 
       this.currentItem = this.playlist[this.currentIndex];
