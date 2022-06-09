@@ -116,7 +116,7 @@ export class VdoPlayerComponent implements OnInit {
 
     interrupt() {
       // To interrupt a long playlist
-      this.httpClient.get("http://localhost:3000/api/v1/task/check-queue/"+this.billboardId).subscribe((res: any) => {
+      this.httpClient.get("https://trial.innovix.ai/api/v1/task/check-queue/"+this.billboardId).subscribe((res: any) => {
         if(res.data > 0) {
           this.allowInterrupt = true;
           console.log('Interrupted, New Tracked Person Object');
