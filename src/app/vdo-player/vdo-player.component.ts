@@ -71,7 +71,7 @@ export class VdoPlayerComponent implements OnInit {
 
     initVideoApi() {
       this.videoCount = 0;
-      this.httpClient.get("https://trial.innovix.ai/api/v1/task/video-feed?byBoardId="+this.billboardId)
+      this.httpClient.get("https://demo.innovix.ai/api/v1/task/video-feed?byBoardId="+this.billboardId)
       .subscribe((res: any) => {
         this.currentIndex = 0;
         this.playlist = [];
@@ -116,7 +116,7 @@ export class VdoPlayerComponent implements OnInit {
 
     interrupt() {
       // To interrupt a long playlist
-      this.httpClient.get("https://trial.innovix.ai/api/v1/task/check-queue/"+this.billboardId).subscribe((res: any) => {
+      this.httpClient.get("https://demo.innovix.ai/api/v1/task/check-queue/"+this.billboardId).subscribe((res: any) => {
         if(res.data > 0) {
           this.allowInterrupt = true;
           console.log('Interrupted, New Tracked Person Object');
@@ -135,7 +135,7 @@ export class VdoPlayerComponent implements OnInit {
     }
     nextVideo() {
       console.log('next', this.currentItem);
-      this.httpClient.post("https://trial.innovix.ai/api/v1/task/update-video-feed/"+this.currentItem.queueId, null).subscribe((res) => console.log('data', res));
+      this.httpClient.post("https://demo.innovix.ai/api/v1/task/update-video-feed/"+this.currentItem.queueId, null).subscribe((res) => console.log('data', res));
       this.currentIndex++;
 
       if (this.currentIndex === this.playlist.length) {

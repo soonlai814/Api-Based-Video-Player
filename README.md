@@ -6,7 +6,7 @@
 
 ```js
     initVideoApi() {
-      this.httpClient.get("https://trial.innovix.ai/api/v1/task/video-feed?byBoardId="+this.billboardId)
+      this.httpClient.get("https://demo.innovix.ai/api/v1/task/video-feed?byBoardId="+this.billboardId)
 ```
 
 # Api re-fetch interval of 10s
